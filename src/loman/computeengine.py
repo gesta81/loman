@@ -325,6 +325,10 @@ class Computation:
         self.src = self.get_attribute_view_for_path(NodeKey.root(), self.print_source, self.print_source)
         self._tag_map = defaultdict(set)
         self._state_map = {state: set() for state in States}
+        # in case of derived class
+        if self.__class__ is not Computation:
+            self._definition_object = self
+            populate_computation_from_class(self, self.__class__, self)
 
     def get_attribute_view_for_path(self, nodekey: NodeKey, get_one_func: callable, get_many_func: callable):
         """Create an attribute view for a specific node path."""

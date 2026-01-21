@@ -253,3 +253,23 @@ def test_computation_factory_calc_node_no_args():
     comp = FooComp()
     comp.compute_all()
     assert comp.s.a == States.UPTODATE and comp.v.a == 3
+
+def test_derive_from_computation():
+    class FooComp(Computation):
+        a = input_node(value=3)
+
+        @calc_node
+        def b(a):
+            return a + 1
+
+        @calc_node(ignore_self=True)
+        def c(self, a):
+            return 2 * a
+
+        @calc_node
+        def d(b, c):
+            return b + c
+
+    comp = FooComp()
+    comp.compute_all()
+    assert comp.s.d == States.UPTODATE and comp.v.d == 10
